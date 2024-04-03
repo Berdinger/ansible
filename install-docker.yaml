@@ -18,12 +18,12 @@
       ansible.builtin.apt_key:
         url: https://download.docker.com/linux/debian/gpg
         state: present
-        keyring: /etc/apt/keyrings/docker.gpg
+        keyring: /etc/apt/keyrings/docker.asc
 
     - name: Add docker repository
       ansible.builtin.apt_repository:
         filename: docker
-        repo: deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian {{ ansible_lsb.codename | lower }} stable
+        repo: deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_lsb.codename | lower }} stable
         state: present
 
     - name: Install docker engine
