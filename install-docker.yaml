@@ -14,6 +14,19 @@
           - software-properties-common
         update_cache: true
 
+#
+#- name: Install InfluxDB key
+#  get_url:
+#    url:  https://repos.influxdata.com/influxdb.key
+#    dest: /etc/apt/trusted.gpg.d/influxdb.asc
+#
+#- name:  Add InfluxDB repository
+#  apt_repository:
+#    repo:  "deb [signed-by=/etc/apt/trusted.gpg.d/influxdb.asc] https://repos.influxdata.com/debian stable main"
+#    state: present
+#    update_cache: yes
+
+
     - name: Create directory for Docker's GPG key
       ansible.builtin.file:
         path: /etc/apt/keyrings
@@ -23,12 +36,13 @@
     - name: Add Docker's official GPG key
       ansible.builtin.apt_key:
         url: https://download.docker.com/linux/debian/gpg
-        keyring: /etc/apt/keyrings/docker.asc
+        #keyring: /etc/apt/keyrings/docker.asc
+        keyring: /etc/apt/trusted.gpg.d/docker.asc
         state: present
 
     - name: Add Docker repository
       ansible.builtin.apt_repository:
-        repo: deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_lsb.codename | lower }} stable
+        repo: deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/docker.asc] https://download.docker.com/linux/debian {{ ansible_lsb.codename | lower }} stable
         filename: docker
         state: present
 
