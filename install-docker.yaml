@@ -14,16 +14,22 @@
           - software-properties-common
         update_cache: true
 
-    - name: Add docker gpg key
+    - name: Create directory for Docker's GPG key
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Add Docker's official GPG key
       ansible.builtin.apt_key:
         url: https://download.docker.com/linux/debian/gpg
-        state: present
         keyring: /etc/apt/keyrings/docker.asc
+        state: present
 
-    - name: Add docker repository
+    - name: Add Docker repository
       ansible.builtin.apt_repository:
-        filename: docker
         repo: deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_lsb.codename | lower }} stable
+        filename: docker
         state: present
 
     - name: Install docker engine
@@ -38,9 +44,9 @@
         update_cache: true
 
 # usermod -aG docker $USER 
-    - name: add user alex to group docker
+    - name: add current user to group docker
       ansible.builtin.user:
-        name: alex
+        name: "{{ ansible_user }}" #alex
         groups: docker
         append: true
 
